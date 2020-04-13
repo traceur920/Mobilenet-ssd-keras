@@ -1,14 +1,16 @@
 import sys
-sys.path.append("/home/manish/MobileNet-ssd-keras/models")
-import keras
-import numpy as np 
+# sys.path.append("/home/manish/MobileNet-ssd-keras/models")
+# import keras
+import numpy as np
 import cv2
-import keras.backend as K
-import keras.layers as KL
+import tensorflow.keras.backend as K
+import tensorflow.keras.layers as KL
 from depthwise_conv2d import DepthwiseConvolution2D
-from keras.models import Model
-from keras.layers import Input, Lambda, Activation,Conv2D, Convolution2D, MaxPooling2D, ZeroPadding2D, Reshape, Concatenate,BatchNormalization, Add, Conv2DTranspose
-from keras.regularizers import l2
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Concatenate,BatchNormalization, Add, Conv2DTranspose
+from tensorflow.keras.layers import Input, Lambda, Activation,Conv2D, Convolution2D
+from tensorflow.keras.layers import MaxPooling2D, ZeroPadding2D, Reshape
+from tensorflow.keras.regularizers import l2
 
 def mobilenet(input_tensor):
 
@@ -42,7 +44,7 @@ def mobilenet(input_tensor):
     x = BatchNormalization( momentum=0.99, epsilon=0.00001 , name="conv2/bn")(x)
     x = Activation('relu')(x)
 
-    
+
 
     x = DepthwiseConvolution2D(128, (3, 3), strides=(1, 1), padding='same', use_bias=False,name="conv3/dw")(x)
     x = BatchNormalization( momentum=0.99, epsilon=0.00001 , name="conv3/dw/bn")(x)
@@ -70,7 +72,7 @@ def mobilenet(input_tensor):
 
     print ("conv5 shape: ", x.shape)
 
-    
+
     x = ZeroPadding2D(padding=((1, 1), (1, 1)), name='conv4_padding')(x)
     x = DepthwiseConvolution2D(256, (3, 3), strides=(2, 2), padding='valid', use_bias=False,name="conv6/dw")(x)
     x = BatchNormalization( momentum=0.99, epsilon=0.00001 , name="conv6/dw/bn")(x)
@@ -80,7 +82,7 @@ def mobilenet(input_tensor):
     x = Activation('relu')(x)
 
     test = x
-    
+
     for i in range(5):
         x = DepthwiseConvolution2D(512, (3, 3), strides=(1, 1), padding='same', use_bias=False,name=("conv" + str(7+i)+"/dw" ))(x)
         x = BatchNormalization( momentum=0.99, epsilon=0.00001 , name=("conv" + str(7+i)+"/dw/bn" ))(x)
