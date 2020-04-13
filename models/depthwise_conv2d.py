@@ -1,6 +1,6 @@
 from tensorflow.keras import backend as K, initializers, regularizers, constraints
 from tensorflow.keras.backend import image_data_format
-from tensorflow.backend import _preprocess_conv2d_input, _preprocess_padding
+from tensorflow.keras.backend import _preprocess_conv2d_input, _preprocess_padding
 from tensorflow.keras.layers import InputSpec
 import tensorflow as tf
 from tensorflow.keras.layers import Conv2D
