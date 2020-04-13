@@ -4,7 +4,7 @@ from keras.backend.tensorflow_backend import _preprocess_conv2d_input, _preproce
 from tensorflow.keras.layers import InputSpec
 import tensorflow as tf
 from tensorflow.keras.layers import Conv2D
-from tensorflow.keras.legacy.interfaces import conv2d_args_preprocessor, generate_legacy_interface
+from keras.legacy.interfaces import conv2d_args_preprocessor, generate_legacy_interface
 from tensorflow.keras.utils import conv_utils
 
 # This code mostly is taken form Keras: Separable Convolution Layer source code and changed according to needs.
