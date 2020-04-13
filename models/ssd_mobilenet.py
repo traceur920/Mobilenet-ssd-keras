@@ -1,13 +1,15 @@
 import sys
 sys.path.append("/home/manish/MobileNet-ssd-keras")
 import keras
-import numpy as np 
+import numpy as np
 import cv2
-import keras.backend as K
-import keras.layers as KL
+import tensorflow.keras.backend as K
+import tensorflow.keras.layers as KL
 from models.depthwise_conv2d import DepthwiseConvolution2D
-from keras.models import Model
-from keras.layers import Input, Lambda, Activation,Conv2D, Convolution2D, MaxPooling2D, ZeroPadding2D, Reshape, Concatenate,BatchNormalization, Add, Conv2DTranspose
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import MaxPooling2D, ZeroPadding2D, Reshape
+from tensorflow.keras.layers import Input, Lambda, Activation,Conv2D, Convolution2D
+from tensorflow.keras.layers import Concatenate,BatchNormalization, Add, Conv2DTranspose
 from keras.regularizers import l2
 from models.mobilenet_v1 import mobilenet
 from misc.keras_layer_L2Normalization import L2Normalization
@@ -42,7 +44,7 @@ def ssd_300(mode,
             divide_by_stddev=None,
             swap_channels=True,
             return_predictor_sizes=False):
-    
+
 
     n_predictor_layers = 6  # The number of predictor conv layers in the network is 6 for the original SSD300.
     n_classes += 1  # Account for the background class.
@@ -175,7 +177,7 @@ def ssd_300(mode,
     conv8_2 = Activation('relu', name='relu_conv8_2')(conv8_2)
 
     print ('conv16 shape', conv8_2.shape)
-    
+
     conv9_1 = Conv2D(64, (1, 1), padding='same', kernel_initializer='he_normal',
         kernel_regularizer=l2(l2_reg), name='conv17_1',use_bias=False)(conv8_2)
     conv9_1 = BatchNormalization( momentum=0.99, epsilon=0.00001, name='conv17_1/bn')(conv9_1)
@@ -190,7 +192,7 @@ def ssd_300(mode,
 
     # Feed conv4_3 into the L2 normalization layer
     # conv4_3_norm = L2Normalization(gamma_init=20, name='conv4_3_norm')(conv4_3_norm)
-   
+
 
     conv4_3_norm_mbox_conf = Conv2D(n_boxes[0] * n_classes, (1,1), padding='same', kernel_initializer='he_normal',
                                     kernel_regularizer=l2(l2_reg), name='conv11_mbox_conf')(conv4_3_norm)
@@ -207,7 +209,7 @@ def ssd_300(mode,
     # We predict 4 box coordinates for each box, hence the localization predictors have depth `n_boxes * 4`
     # Output shape of the localization layers: `(batch, height, width, n_boxes * 4)`
     conv4_3_norm_mbox_loc = Conv2D(n_boxes[0] * 4, (1,1), padding='same', kernel_initializer='he_normal',
-                                   kernel_regularizer=l2(l2_reg), name='conv11_mbox_loc')(conv4_3_norm)
+                                   kernel_regularizer=l2(l2_reg), name='conv11_mbox_loc')( conv4_3_norm )
     fc7_mbox_loc = Conv2D(n_boxes[1] * 4, (1,1), padding='same', kernel_initializer='he_normal',
                           kernel_regularizer=l2(l2_reg), name='conv13_mbox_loc')(fc7)
     conv6_2_mbox_loc = Conv2D(n_boxes[2] * 4, (1,1), padding='same', kernel_initializer='he_normal',
@@ -227,7 +229,7 @@ def ssd_300(mode,
                                              two_boxes_for_ar1=two_boxes_for_ar1, this_steps=steps[0],
                                              this_offsets=offsets[0], limit_boxes=limit_boxes,
                                              variances=variances, coords=coords, normalize_coords=normalize_coords,
-                                             name='conv4_3_norm_mbox_priorbox')(conv4_3_norm_mbox_loc)
+                                             name='conv4_3_norm_mbox_priorbox')( conv4_3_norm_mbox_loc )
     fc7_mbox_priorbox = AnchorBoxes(img_height, img_width, this_scale=scales[1], next_scale=scales[2],
                                     aspect_ratios=aspect_ratios[1],
                                     two_boxes_for_ar1=two_boxes_for_ar1, this_steps=steps[1], this_offsets=offsets[1],
@@ -403,16 +405,3 @@ if __name__ == '__main__':
                     subtract_mean=subtract_mean,
                     divide_by_stddev=None,
                     swap_channels=swap_channels)
-
-
-
-
-
-
-
-
-
-
-
-
-
