@@ -122,7 +122,7 @@ class DepthwiseConv2D(Conv2D):
         outputs = tf.nn.depthwise_conv2d(inputs, self.depthwise_kernel,
                                          strides=strides,
                                          padding=padding,
-                                         rate=self.dilation_rate)
+                                         dilations = self.dilation_rate)
 
         if self.bias:
             outputs = K.bias_add(
