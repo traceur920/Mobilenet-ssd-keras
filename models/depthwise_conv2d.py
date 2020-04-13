@@ -1,11 +1,11 @@
-from keras import backend as K, initializers, regularizers, constraints
-from keras.backend import image_data_format
-from keras.backend.tensorflow_backend import _preprocess_conv2d_input, _preprocess_padding
-from keras.engine.topology import InputSpec
+from tensorflow.keras import backend as K, initializers, regularizers, constraints
+from tensorflow.keras.backend import image_data_format
+from tensorflow.backend import _preprocess_conv2d_input, _preprocess_padding
+from tensorflow.keras.layers import InputSpec
 import tensorflow as tf
-from keras.layers import Conv2D
-from keras.legacy.interfaces import conv2d_args_preprocessor, generate_legacy_interface
-from keras.utils import conv_utils
+from tensorflow.keras.layers import Conv2D
+from tensorflow.keras.legacy.interfaces import conv2d_args_preprocessor, generate_legacy_interface
+from tensorflow.keras.utils import conv_utils
 
 # This code mostly is taken form Keras: Separable Convolution Layer source code and changed according to needs.
 
