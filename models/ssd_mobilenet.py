@@ -323,7 +323,7 @@ def ssd_300(mode,
 
     # Concatenate the class and box predictions and the anchors to one large predictions vector
     # Output shape of `predictions`: (batch, n_boxes_total, n_classes + 4 + 8)
-    predictions = Concatenate(axis=2, name='predictions')([mbox_conf_softmax, mbox_loc, mbox_priorbox])
+    predictions = Concatenate(axis=2, name='predictions')( [mbox_conf_softmax, mbox_loc, mbox_priorbox] )
 
     model = Model(inputs=x, outputs=predictions)
     # return model
@@ -338,8 +338,8 @@ def ssd_300(mode,
                                                    normalize_coords=normalize_coords,
                                                    img_height=img_height,
                                                    img_width=img_width,
-                                                   name='decoded_predictions')(predictions)
-        model = Model(inputs=x, outputs=decoded_predictions)
+                                                   name='decoded_predictions')( predictions )
+        model = Model( inputs = x, outputs = decoded_predictions )
     else:
         print ('in training mode')
 
