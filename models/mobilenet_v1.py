@@ -5,7 +5,7 @@ import numpy as np
 import cv2
 import tensorflow.keras.backend as K
 import tensorflow.keras.layers as KL
-from tensorflow.keras.backend import depthwise_conv2d as DepthwiseConvolution2D
+from  depthwise_conv2d import DepthwiseConvolution2D
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Concatenate,BatchNormalization, Add, Conv2DTranspose
 from tensorflow.keras.layers import Input, Lambda, Activation,Conv2D, Convolution2D
