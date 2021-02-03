@@ -1,11 +1,9 @@
 import sys
-# sys.path.append("/home/manish/MobileNet-ssd-keras/models")
-# import keras
 import numpy as np
 import cv2
 import tensorflow.keras.backend as K
 import tensorflow.keras.layers as KL
-from  models.depthwise_conv2d import DepthwiseConvolution2D
+from tensorflow.keras.layers import DepthwiseConv2D as DepthwiseConvolution2D
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Concatenate,BatchNormalization, Add, Conv2DTranspose
 from tensorflow.keras.layers import Input, Lambda, Activation,Conv2D, Convolution2D
@@ -27,7 +25,7 @@ def mobilenet(input_tensor):
 
 
 
-    x = DepthwiseConvolution2D(32, (3, 3), strides=(1, 1), padding='same', use_bias=False, name="conv1/dw")(x)
+    x = DepthwiseConvolution2D( (3, 3), strides=(1, 1), padding='same',use_bias=False)(x)
     x = BatchNormalization( momentum=0.99, epsilon=0.00001 , name="conv1/dw/bn")(x)
     x = Activation('relu')(x)
     x = Convolution2D(64, (1, 1), strides=(1, 1), padding='same', use_bias=False, name="conv1")(x)
@@ -37,7 +35,7 @@ def mobilenet(input_tensor):
     print ("conv1 shape: ", x.shape)
 
     x = ZeroPadding2D(padding=((1, 1), (1, 1)), name='conv2_padding')(x)
-    x = DepthwiseConvolution2D(64, (3, 3), strides=(2, 2), padding='valid', use_bias=False,name="conv2/dw")(x)
+    x = DepthwiseConvolution2D( (3, 3), strides=(2, 2), padding='valid',use_bias=False)(x)
     x = BatchNormalization( momentum=0.99, epsilon=0.00001 , name="conv2/dw/bn")(x)
     x = Activation('relu')(x)
     x = Convolution2D(128, (1, 1), strides=(1, 1), padding='same', use_bias=False,name="conv2")(x)
@@ -46,7 +44,7 @@ def mobilenet(input_tensor):
 
 
 
-    x = DepthwiseConvolution2D(128, (3, 3), strides=(1, 1), padding='same', use_bias=False,name="conv3/dw")(x)
+    x = DepthwiseConvolution2D( (3, 3), strides=(1, 1), padding='same',use_bias=False)(x)
     x = BatchNormalization( momentum=0.99, epsilon=0.00001 , name="conv3/dw/bn")(x)
     x = Activation('relu')(x)
     x = Convolution2D(128, (1, 1), strides=(1, 1), padding='same', use_bias=False,name="conv3")(x)
@@ -56,14 +54,14 @@ def mobilenet(input_tensor):
     print ("conv3 shape: ", x.shape)
 
     x = ZeroPadding2D(padding=((1, 1), (1, 1)), name='conv3_padding')(x)
-    x = DepthwiseConvolution2D(128, (3, 3), strides=(2, 2), padding='valid', use_bias=False,name="conv4/dw")(x)
+    x = DepthwiseConvolution2D( (3, 3), strides=(2, 2), padding='valid',use_bias=False)(x)
     x = BatchNormalization( momentum=0.99, epsilon=0.00001 , name="conv4/dw/bn")(x)
     x = Activation('relu')(x)
     x = Convolution2D(256, (1, 1), strides=(1, 1), padding='same', use_bias=False,name="conv4")(x)
     x = BatchNormalization( momentum=0.99, epsilon=0.00001 , name="conv4/bn")(x)
     x = Activation('relu')(x)
 
-    x = DepthwiseConvolution2D(256, (3, 3), strides=(1, 1), padding='same', use_bias=False,name="conv5/dw")(x)
+    x = DepthwiseConvolution2D( (3, 3), strides=(1, 1), padding='same',use_bias=False)(x)
     x = BatchNormalization( momentum=0.99, epsilon=0.00001 , name="conv5/dw/bn")(x)
     x = Activation('relu')(x)
     x = Convolution2D(256, (1, 1), strides=(1, 1), padding='same', use_bias=False,name="conv5")(x)
@@ -74,7 +72,7 @@ def mobilenet(input_tensor):
 
 
     x = ZeroPadding2D(padding=((1, 1), (1, 1)), name='conv4_padding')(x)
-    x = DepthwiseConvolution2D(256, (3, 3), strides=(2, 2), padding='valid', use_bias=False,name="conv6/dw")(x)
+    x = DepthwiseConvolution2D( (3, 3), strides=(2, 2), padding='valid',use_bias=False)(x)
     x = BatchNormalization( momentum=0.99, epsilon=0.00001 , name="conv6/dw/bn")(x)
     x = Activation('relu')(x)
     x = Convolution2D(512, (1, 1), strides=(1, 1), padding='same', use_bias=False,name="conv6")(x)
@@ -84,7 +82,7 @@ def mobilenet(input_tensor):
     test = x
 
     for i in range(5):
-        x = DepthwiseConvolution2D(512, (3, 3), strides=(1, 1), padding='same', use_bias=False,name=("conv" + str(7+i)+"/dw" ))(x)
+        x = DepthwiseConvolution2D( (3, 3), strides=(1, 1), padding='same' ,use_bias=False)(x)
         x = BatchNormalization( momentum=0.99, epsilon=0.00001 , name=("conv" + str(7+i)+"/dw/bn" ))(x)
         x = Activation('relu')(x)
         x = Convolution2D(512, (1, 1), strides=(1, 1), padding='same', use_bias=False,name=("conv" + str(7+i)))(x)
@@ -96,14 +94,14 @@ def mobilenet(input_tensor):
 
 
     x = ZeroPadding2D(padding=((1, 1), (1, 1)), name='conv5_padding')(x)
-    x = DepthwiseConvolution2D(512, (3, 3), strides=(2, 2), padding='valid', use_bias=False,name="conv12/dw")(x)
+    x = DepthwiseConvolution2D( (3, 3), strides=(2, 2), padding='valid',use_bias=False)(x)
     x = BatchNormalization( momentum=0.99, epsilon=0.00001 , name="conv12/dw/bn")(x)
     x = Activation('relu')(x)
     x = Convolution2D(1024, (1, 1), strides=(1, 1), padding='same', use_bias=False,name="conv12")(x)
     x = BatchNormalization( momentum=0.99, epsilon=0.00001 , name="conv12/bn")(x)
     x = Activation('relu')(x)
 
-    x = DepthwiseConvolution2D(1024, (3, 3), strides=(1, 1), padding='same', use_bias=False,name="conv13/dw")(x)
+    x = DepthwiseConvolution2D( (3, 3), strides=(1, 1), padding='same',use_bias=False)(x)
     x = BatchNormalization( momentum=0.99, epsilon=0.00001 , name="conv13/dw/bn")(x)
     x = Activation('relu')(x)
     x = Convolution2D(1024, (1, 1), strides=(1, 1), padding='same', use_bias=False,name="conv13")(x)
