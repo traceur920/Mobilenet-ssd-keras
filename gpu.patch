@@ -1,0 +1,34 @@
+--- orig.py	2021-02-08 11:42:51.153788429 +0000
++++ eval_utils/average_precision_evaluator.py	2021-02-08 10:45:09.433171354 +0000
+@@ -33,6 +33,8 @@
+ 
+ from bounding_box_utils.bounding_box_utils import iou
+ 
++import tensorflow as tf
++
+ class Evaluator:
+     '''
+     Computes the mean average precision of the given Keras SSD model on the given dataset.
+@@ -370,12 +372,21 @@
+         else:
+             tr = range(n_batches)
+ 
++
++        # Make GPU avaible
++        if not tf.test.is_gpu_avaible():
++            device_name='/cpu:0'
++        else:
++            device_name=gpu_device_name()
++
+         # Loop over all batches.
+         for j in tr:
+             # Generate batch.
+             batch_X, batch_image_ids, batch_eval_neutral, batch_inverse_transforms, batch_orig_labels = next(generator)
+             # Predict.
+-            y_pred = self.model.predict(batch_X)
++            with tf.device(device_name):
++                y_pred = self.model.predict(batch_X)
++
+             # If the model was created in 'training' mode, the raw predictions need to
+             # be decoded and filtered, otherwise that's already taken care of.
+             if self.model_mode == 'training':
