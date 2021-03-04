@@ -52,10 +52,10 @@ model = ssd_300(model_mode,
 model.summary()
 model.save("saved_model/model_for_v1_compat")
 import tensorflow as tf
+print("TENSORFLOW VERSION: ",tf.__version__)
 converter=tf.compat.v1.lite.TFLiteConverter.from_saved_model("saved_model/model_for_v1_compat")
 #converter.target_spec.supported_ops=[tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
 #converter.allow_custom_ops=True
-#converter.optimizations=['tf.lite.Optimize.OPTIMIZE_FOR_LATENCY']
 lite=converter.convert()
-with open('../model_v1_compat.tflite', 'wb') as f:
+with open('./model_v1_compat.tflite', 'wb') as f:
     f.write(lite)

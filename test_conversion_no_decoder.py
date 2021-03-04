@@ -9,7 +9,7 @@ scales = [0.2, 0.35, 0.5, 0.65, 0.8, 0.95, 1]
 img_height = 300
 img_width = 300
 n_classes = 20
-model_mode = 'inference'
+model_mode = 'training'
 # 1: Build the Keras model
 img_height = 300  # Height of the input images
 img_width = 300  # Width of the input images
@@ -56,5 +56,5 @@ converter=tf.lite.TFLiteConverter.from_keras_model(model)
 #converter.target_spec.supported_ops=[tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
 #converter.allow_custom_ops=True
 lite=converter.convert()
-with open('./model_altered.tflite', 'wb') as f:
+with open('./model_no_decoder.tflite', 'wb') as f:
     f.write(lite)
