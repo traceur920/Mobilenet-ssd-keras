@@ -124,7 +124,8 @@ class DecodeDetectionsFast(Layer):
         #####################################################################################
 
         # Extract the predicted class IDs as the indices of the highest confidence values.
-        class_ids = tf.expand_dims(tf.compat.v1.to_float(tf.argmax(y_pred[...,:-12], axis=-1)), axis=-1)
+        class_ids = tf.expand_dims(tf.cast(tf.argmax(y_pred[...,:-12], axis=-1),dtype=tf.float32), axis=-1)
+        #class_ids = tf.expand_dims(tf.compat.v1.to_float(tf.argmax(y_pred[...,:-12], axis=-1)), axis=-1)
         # Extract the confidences of the maximal classes.
         confidences = tf.math.reduce_max(y_pred[...,:-12], axis=-1, keepdims=True)
 
@@ -237,14 +238,14 @@ class DecodeDetectionsFast(Layer):
             return top_k_boxes
 
         # Iterate `filter_predictions()` over all batch items.
-        output_tensor = tf.map_fn(fn=lambda x: filter_predictions(x),
+        output_tensor = tf.stop_gradient(tf.map_fn(fn=lambda x: filter_predictions(x),
                                   elems=y_pred,
-                                  dtype=None,
+                                  #dtype=None,
                                   parallel_iterations=128,
-                                  back_prop=False,
+                                  back_prop=True,
                                   swap_memory=False,
                                   infer_shape=True,
-                                  name='loop_over_batch')
+                                  name='loop_over_batch'))
 
         return output_tensor
 
